@@ -1,0 +1,8 @@
+[package]
+name = "racing"
+version = "0.1.0"
+edition = "2021"
+
+
+[dependencies]
+raylib = { version = "5.5.1", features = ["bindgen"] }
