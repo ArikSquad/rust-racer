@@ -5,4 +5,28 @@ edition = "2021"
 
 
 [dependencies]
-raylib = { version = "5.5.1", features = ["bindgen"] }
+bevy = { version = "0.16", default-features = true, features = [
+	"bevy_animation",
+	"bevy_asset",
+	"bevy_core_pipeline",
+	"bevy_state",
+	"bevy_gltf",
+	"bevy_gizmos",
+	"bevy_pbr",
+	"bevy_render",
+	"bevy_scene",
+	"bevy_sprite",
+	"bevy_text",
+	"bevy_ui",
+	"bevy_winit",
+	"multi_threaded",
+	"png",
+] }
+avian3d = "0.3"
+bevy_egui = "0.36"
+bevy_framepace = "0.19"
+bevy_atmosphere = "0.13"
+bevy_skein = "0.2.1"
+
+
+
