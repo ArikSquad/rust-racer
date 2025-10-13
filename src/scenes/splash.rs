@@ -56,7 +56,7 @@ fn splash_system(
         if state.alpha >= 1.0 {
             state.alpha = 1.0;
             state.timer.tick(time.delta());
-            if state.timer.finished() {
+            if state.timer.is_finished() {
                 state.fade_in = false;
                 state.timer.reset();
             }
@@ -71,7 +71,6 @@ fn splash_system(
         }
     }
     let show_text = if phase < texts.len() { texts[phase] } else { "" };
-    println!("Phase: {}, Alpha: {:.2}", phase, state.alpha);
     let ctx = match contexts.ctx_mut() {
         Ok(c) => c,
         Err(_) => return, // no egui context available this frame

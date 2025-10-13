@@ -1,32 +1,76 @@
+cargo-features = ["codegen-backend"]
+
 [package]
 name = "racing"
 version = "0.1.0"
 edition = "2021"
 
-
 [dependencies]
-bevy = { version = "0.16", default-features = true, features = [
-	"bevy_animation",
-	"bevy_asset",
-	"bevy_core_pipeline",
-	"bevy_state",
-	"bevy_gltf",
-	"bevy_gizmos",
-	"bevy_pbr",
-	"bevy_render",
-	"bevy_scene",
-	"bevy_sprite",
-	"bevy_text",
-	"bevy_ui",
-	"bevy_winit",
-	"multi_threaded",
-	"png",
-] }
-avian3d = "0.3"
-bevy_egui = "0.36"
-bevy_framepace = "0.19"
-bevy_atmosphere = "0.13"
-bevy_skein = "0.2.1"
+bevy = { version = "0.17.2", default-features = true, features = ["bevy_dev_tools"] }
+avian3d = { git = "https://github.com/Jondolf/avian", branch = "main" }
+bevy_egui = "0.37.1"
+bevy_skein = "0.3.0-rc.1"
+bevy-inspector-egui = "0.34.0"
 
+[unstable]
+codegen-backend = true
 
+[profile.dev]
+codegen-backend = "cranelift"
+opt-level = 1
 
+[profile.dev.package."*"]
+codegen-backend = "llvm"
+opt-level = 3
+
+[target.x86_64-pc-windows-msvc]
+# LLD linker
+#
+# You may need to install it:
+#
+# ```
+# cargo install -f cargo-binutils
+# rustup component add llvm-tools
+# ```
+linker = "rust-lld.exe"
+rustdocflags = ["-Clinker=rust-lld.exe"]
+rustflags = [
+  # Nightly
+  # "-Zshare-generics=n", # This needs to be off if you use dynamic linking on Windows.
+  # "-Zthreads=0",
+]
+
+[target.x86_64-unknown-linux-gnu]
+linker = "clang"
+rustflags = [
+  # LLD linker
+  #
+  # You may need to install it:
+  #
+  # - Ubuntu: `sudo apt-get install lld clang`
+  # - Fedora: `sudo dnf install lld clang`
+  # - Arch: `sudo pacman -S lld clang`
+  "-Clink-arg=-fuse-ld=lld",
+
+  # Mold linker
+  #
+  # You may need to install it:
+  #
+  # - Ubuntu: `sudo apt-get install mold clang`
+  # - Fedora: `sudo dnf install mold clang`
+  # - Arch: `sudo pacman -S mold clang`
+  # "-Clink-arg=-fuse-ld=mold",
+
+  # Nightly
+  # "-Zshare-generics=y",
+  # "-Zthreads=0",
+]
+# Some systems may experience linker performance issues when running doc tests.
+# See https://github.com/bevyengine/bevy/issues/12207 for details.
+rustdocflags = [
+  # LLD linker
+  "-Clink-arg=-fuse-ld=lld",
+
+  # Mold linker
+  # "-Clink-arg=-fuse-ld=mold",
+]

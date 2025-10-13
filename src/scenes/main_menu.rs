@@ -1,14 +1,17 @@
-use bevy::prelude::*;
-use bevy::app::AppExit;
 use crate::scenes::GameScene;
-use bevy_egui::{EguiContexts, egui, EguiPrimaryContextPass};
+use bevy::app::AppExit;
+use bevy::prelude::*;
+use bevy_egui::{egui, EguiContexts, EguiPrimaryContextPass};
 
 pub struct MainMenuPlugin;
 
 impl Plugin for MainMenuPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(GameScene::MainMenu), main_menu_setup)
-            .add_systems(EguiPrimaryContextPass, main_menu_system.run_if(in_state(GameScene::MainMenu)))
+            .add_systems(
+                EguiPrimaryContextPass,
+                main_menu_system.run_if(in_state(GameScene::MainMenu)),
+            )
             .add_systems(OnExit(GameScene::MainMenu), main_menu_cleanup);
     }
 }
@@ -19,7 +22,7 @@ fn main_menu_cleanup() {}
 fn main_menu_system(
     mut contexts: EguiContexts,
     mut next_state: ResMut<NextState<GameScene>>,
-    mut exit: EventWriter<AppExit>,
+    mut exit: MessageWriter<AppExit>,
 ) {
     let ctx = match contexts.ctx_mut() {
         Ok(c) => c,
